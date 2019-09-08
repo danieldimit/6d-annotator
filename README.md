@@ -28,3 +28,13 @@ python manualLabelCv.py -i <images dir> -m <PLY 3d-model of the object>
                   [max_x, max_y, min_z],
                   [max_x, max_y, max_z]]
 - `n` - next. After you are satisfied with the bouding box click `n` to create its labels and to go to the next image, if any.
+
+### Demo
+
+#### Using the PnP helper:
+
+<img src="demoGifs/pnp.gif" width="400" height="350">
+
+#### Doing the labelling manually:
+
+<img src="demoGifs/normal.gif" width="400" height="350">
