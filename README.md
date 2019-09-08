@@ -1,4 +1,4 @@
-# 6D dataset manual labelling tool
+# 6D Annotator
 
 This is a tool used to create 6D labels for 2D images. 6D labelling means that a 3D bounding box is fitted around an object in the 2D picture. It is 6D, because the 3D bounding box fitting requires 3 translation inputs (x,y,z) and 3 rotational degrees. It is designed to create labels for [singleshotpose](https://github.com/microsoft/singleshotpose) and [betapose](https://github.com/sjtuytc/betapose). But should be easily extendable to other 6D label formats.
 
