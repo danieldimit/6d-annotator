@@ -11,9 +11,9 @@ files = []
 file_counter = 0
 angle_max = 720000000
 angle_full_range = 6.4
-t_range = 32000
-t_grnlrty = 2000
-t_z_grnlrty = 20000
+t_range = 320
+t_grnlrty = 160
+t_z_grnlrty = 200
 image = None
 clone = None
 
@@ -43,7 +43,7 @@ def click_and_crop(event, x, y, flags, param):
 			t = (result[1] * t_grnlrty + t_start).astype(int)
 			t_x = t[0][0]
 			t_y = t[1][0]
-			t_z = int(result[1][2][0] * t_z_grnlrty)
+			t_z = abs(int(result[1][2][0] * t_z_grnlrty))
 			cv2.setTrackbarPos('t_x', 'image', t_x)
 			cv2.setTrackbarPos('t_y', 'image', t_y)
 			cv2.setTrackbarPos('t_z', 'image', t_z)
