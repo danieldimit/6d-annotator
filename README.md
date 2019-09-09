@@ -31,10 +31,6 @@ python manualLabelCv.py -i <images dir> -m <PLY 3d-model of the object>
 
 ### Demo
 
-#### Using the PnP helper:
-
-<img src="demoGifs/pnp.gif" width="400" height="350">
-
-#### Doing the labelling manually:
+First the PnP functionality is used to create initial guess. Beaware that the order in which the corners are clicked is importaint. After the PnP initial guess the bounding box is manuall refined.
 
 <img src="demoGifs/normal.gif" width="400" height="350">
