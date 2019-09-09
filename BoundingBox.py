@@ -12,6 +12,8 @@ class BoundingBox:
 		self.mesh          = MeshPly(mesh_name)
 		self.vertices      = np.c_[np.array(self.mesh.vertices), np.ones((len(self.mesh.vertices), 1))].transpose()
 		self.corners3D     = get_3D_corners(self.vertices)
+		idx = np.random.randint(self.vertices.shape[1], size=2000)
+		self.reduced_vertices = self.vertices.T[idx,:].T
 		# diam          = calc_pts_diameter(np.array(mesh.vertices))
 		self.diam          = float(0.6536639)
 		self.w = 640
@@ -52,23 +54,27 @@ class BoundingBox:
 		cv2.circle(image_tmp,(proj_2d_p[0,3], proj_2d_p[1,3]), 4, (255,0,0), -1)
 		cv2.circle(image_tmp,(proj_2d_p[0,1], proj_2d_p[1,1]), 4, (255,0,0), -1)
 
-		# Draw lower base of 3d bb
-		pts = np.array([[proj_2d_p[0, 0], proj_2d_p[1, 0]], [proj_2d_p[0, 2], proj_2d_p[1, 2]],
-						[proj_2d_p[0, 3], proj_2d_p[1, 3]], [proj_2d_p[0, 1], proj_2d_p[1, 1]]],
-					   np.int32)
-		cv2.polylines(image_tmp, [pts], True, (255, 0, 0))
 
+		proj_2d_vert = compute_projection(self.reduced_vertices, Rt, self.i_c).astype(int).T
+		for c in proj_2d_vert:
+			if (c[0] < self.w and c[0] >= 0 and c[1] < self.h and c[1] >= 0):
+				image_tmp[c[1], c[0]]=(0,255,0)
+
+		# Draw lower base of 3d bb
+		pts = np.array([[proj_2d_p[0,0], proj_2d_p[1,0]],[proj_2d_p[0,2], proj_2d_p[1,2]],[proj_2d_p[0,3], proj_2d_p[1,3]],[proj_2d_p[0,1], proj_2d_p[1,1]]], np.int32)
+		cv2.polylines(image_tmp,[pts],True,(255,0,0))
+		
 		# Draw the front of the bounding box
-		pts = np.array([[proj_2d_p[0, 3], proj_2d_p[1, 3]], [proj_2d_p[0, 7], proj_2d_p[1, 7]],
-						[proj_2d_p[0, 6], proj_2d_p[1, 6]], [proj_2d_p[0, 2], proj_2d_p[1, 2]]],
-					   np.int32)
-		cv2.polylines(image_tmp, [pts], True, (0, 255, 255))
+		pts = np.array([[proj_2d_p[0,3], proj_2d_p[1,3]],[proj_2d_p[0,7], proj_2d_p[1,7]],[proj_2d_p[0,6], proj_2d_p[1,6]],[proj_2d_p[0,2], proj_2d_p[1,2]]], np.int32)
+		cv2.polylines(image_tmp,[pts],True,(0,0,255))
 
 		# Draw upper base of 3d bb
-		pts = np.array([[proj_2d_p[0, 4], proj_2d_p[1, 4]], [proj_2d_p[0, 6], proj_2d_p[1, 6]],
-						[proj_2d_p[0, 7], proj_2d_p[1, 7]], [proj_2d_p[0, 5], proj_2d_p[1, 5]]],
-					   np.int32)
-		cv2.polylines(image_tmp, [pts], True, (0, 255, 255))
+		pts = np.array([[proj_2d_p[0,4], proj_2d_p[1,4]],[proj_2d_p[0,6], proj_2d_p[1,6]],[proj_2d_p[0,7], proj_2d_p[1,7]],[proj_2d_p[0,5], proj_2d_p[1,5]]], np.int32)
+		cv2.polylines(image_tmp,[pts],True,(0,255,255))
+
+		# Draw -y side
+		pts = np.array([[proj_2d_p[0,0], proj_2d_p[1,0]],[proj_2d_p[0,2], proj_2d_p[1,2]],[proj_2d_p[0,6], proj_2d_p[1,6]],[proj_2d_p[0,4], proj_2d_p[1,4]]], np.int32)
+		cv2.polylines(image_tmp,[pts],True,(0,255,0))
 
 		if (save == True):
 			if not os.path.exists('./labels'):
@@ -90,13 +96,13 @@ class BoundingBox:
 			f_s.write("0 %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f" % (c_x, c_y, proj_2d_p[0][0], proj_2d_p[1][0], proj_2d_p[0][1], proj_2d_p[1][1], proj_2d_p[0][2], proj_2d_p[1][2], proj_2d_p[0][3], proj_2d_p[1][3], proj_2d_p[0][4], proj_2d_p[1][4], proj_2d_p[0][5], proj_2d_p[1][5], proj_2d_p[0][6], proj_2d_p[1][6], proj_2d_p[0][7], proj_2d_p[1][7], range_x, range_y))
 			f_s.close()
 
-			t = c_x - (range_x/2)
-			l = c_y - (range_y/2)
+			top = c_x - (range_x/2)
+			left = c_y - (range_y/2)
 
 			f_b.write(str(self.created_i) + ':\n')
 			f_b.write('- cam_R_m2c: ' + np.array2string(R.flatten(), precision=8, separator=',', suppress_small=True) + '\n')
 			f_b.write('  cam_t_m2c: ' + np.array2string(t.flatten() * 1000, precision=8, separator=',', suppress_small=True) + '\n')
-			f_b.write('  obj_bb: ' + np.array2string(np.array([t*self.w,l*self.h,range_x*self.w,range_y*self.h], dtype=int), separator=',') + '\n')
+			f_b.write('  obj_bb: ' + np.array2string(np.array([top*self.w,left*self.h,range_x*self.w,range_y*self.h], dtype=int), separator=',') + '\n')
 			f_b.write('  obj_id: 1\n')
 			f_b.close()
 

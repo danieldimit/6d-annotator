@@ -11,8 +11,9 @@ files = []
 file_counter = 0
 angle_max = 720000000
 angle_full_range = 6.4
-t_range = 4000
-t_grnlrty = 200
+t_range = 32000
+t_grnlrty = 2000
+t_z_grnlrty = 20000
 image = None
 clone = None
 
@@ -23,7 +24,7 @@ angle_subdiv = angle_max/angle_full_range
 def move_bounding_box(save=False):
 	global bb_calc, image, clone, a_x, a_y, a_z, t_x, t_y, t_z
 	R = eulerAnglesToRotationMatrix([a_x/(angle_subdiv),a_y/(angle_subdiv),a_z/(angle_subdiv)])
-	t = np.array([((t_x-(t_range/2))/t_grnlrty,(t_y-(t_range/2))/t_grnlrty,(t_z-(t_range/2))/t_grnlrty)], dtype=float).T
+	t = np.array([((t_x-(t_range/2))/t_grnlrty,(t_y-(t_range/2))/t_grnlrty,t_z/t_z_grnlrty)], dtype=float).T
 	image_tmp = clone.copy()
 	image = bb_calc.draw_on_img(image_tmp, R, t, save=save)
 
@@ -42,7 +43,7 @@ def click_and_crop(event, x, y, flags, param):
 			t = (result[1] * t_grnlrty + t_start).astype(int)
 			t_x = t[0][0]
 			t_y = t[1][0]
-			t_z = t[2][0]
+			t_z = int(result[1][2][0] * t_z_grnlrty)
 			cv2.setTrackbarPos('t_x', 'image', t_x)
 			cv2.setTrackbarPos('t_y', 'image', t_y)
 			cv2.setTrackbarPos('t_z', 'image', t_z)
@@ -90,7 +91,7 @@ cv2.setMouseCallback("image", click_and_crop)
 
 cv2.createTrackbar('t_x','image',t_start,t_range,move_bounding_box)
 cv2.createTrackbar('t_y','image',t_start,t_range,move_bounding_box)
-cv2.createTrackbar('t_z','image',t_start,t_range,move_bounding_box)
+cv2.createTrackbar('t_z','image',0,t_range,move_bounding_box)
 
 cv2.createTrackbar('R_x','image',0,angle_max,move_bounding_box)
 cv2.createTrackbar('R_y','image',0,angle_max,move_bounding_box)
