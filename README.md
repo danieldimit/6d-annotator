@@ -29,9 +29,10 @@ python manualLabelCv.py -i <images dir> -m <PLY 3d-model of the object>
                   [max_x, max_y, min_z],
                   [max_x, max_y, max_z]]
 - `n` - next. After you are satisfied with the bouding box click `n` to create its labels and to go to the next image, if any.
+- `c` - closes the program
 
 ### Demo
 
 First the PnP functionality is used to create initial guess. Beaware that the order in which the corners are clicked is importaint. After the PnP initial guess the bounding box is manuall refined.
 
-<img src="demoGifs/normal.gif" width="400" height="350">
+<img src="demoGifs/demo.gif" width="400" height="350">
