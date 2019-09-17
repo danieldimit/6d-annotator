@@ -12,7 +12,7 @@ The program was tested on python 3.7.
 
 1. First install all needed libraries.
 2. Prepare a 3D model of the object you would like ot use in .ply format.
-3. (optional) To use the PnP functionality choose 4 easy to find points that are visible on most images. Take their 3d coordinates from the ply model. Then substitute the `all_points = ...` array with your points. To find out what the 3d coordinate of the points you've chosen are you can use Meshlab. Just open your ply model, choose the measuring tool, click 2 of the points and click 'P'. The coordinates of the 2 points would be displayed in the lower right console.
+3. (optional) To use the PnP functionality choose 4 easy to find points that are visible on most images. Take their 3d coordinates from the ply model. Then substitute the `all_points = ...` array in `BoundingBox.py` with your points. To find out what the 3d coordinate of the points you've chosen are you can use Meshlab. Just open your ply model, choose the measuring tool, click 2 of the points and click 'P'. The coordinates of the 2 points would be displayed in the lower right console.
 4. To start the program type in the following command:
 ```
 python manualLabelCv.py -i <images dir> -m <PLY 3d-model of the object>
