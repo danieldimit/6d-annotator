@@ -23,12 +23,17 @@ class BoundingBox:
 
 	def add_clicked_point(self, point):
 		self.marked_points.append(point)
-		if (len(self.marked_points) == 8):
+		if (len(self.marked_points) == 4):
 			self.marked_points = np.asarray(self.marked_points, dtype=float).T
 			self.marked_points[0] = self.marked_points[0]
 			self.marked_points[1] = self.marked_points[1]
-			all_points = np.array(np.transpose(self.corners3D[:3, :]), dtype='float32')
-			lower_points = np.array([all_points[0], all_points[2], all_points[4], all_points[6]])
+			#all_points = np.array(np.transpose(self.corners3D[:3, :]), dtype='float32')
+			# far right, far left, near right, near left
+			#all_points = np.array([[0.072234, 0.205713, -0.097741], [-0.074296, 0.206448, -0.097032], [0.074358, 0.116048, -0.100746],[-0.075816, 0.116361, -0.105058]])
+			# near right, far right, near left, far left
+			all_points = np.array([[0.140487,0.085116,-0.094686],[0.155971,0.246529,-0.094677],[-0.140479,0.085057,-0.094924],[-0.156152,0.246414,-0.094853]])
+			print(all_points)
+			print(self.marked_points.T)
 			R, t = pnp(all_points, self.marked_points.T, np.array(self.i_c, dtype='float32'))
 			Rt = np.append(R, t, axis=1)
 			proj_2d_p = compute_projection(self.corners3D, Rt, self.i_c)
