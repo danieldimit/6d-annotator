@@ -4,8 +4,13 @@ This is a tool used to create 6D labels for 2D images. 6D labelling means that a
 
 ### Features
 The tool has the following features:
-- Semi-automatic - left click with the mouse on 4 points of the bounding box and a PnP algorithm would create initial guess what the bounding box coordinates are
+- Semi-automatic - left click with the mouse on 4 points of your choice (predefined by you) and a PnP algorithm would create initial guess what the object pose is
 - Pick-up where you left off - the program looks how many labels are already created and continues from the last picture which was not yet labeled
+- Auto reduce the PLY objects vertices. A PLY object can get big and hence it might become too heavy to calculate its projection.
+
+### Requirements
+- Numpy
+- OpenCV
 
 ### How to use
 The program was tested on python 3.7.
