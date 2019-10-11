@@ -1,6 +1,6 @@
-# 6D Annotator
+## NOTICE: The project was continued as a web-tool which is available online for free on: [http://annotate.photo/](http://annotate.photo?ref=github)
 
-NOTICE: The project was continued as a web-tool which is available on: [http://annotate.photo/](http://annotate.photo?ref=github) for free.
+# 6D Annotator
 
 This is a tool used to create 6D labels for 2D images. 6D labelling means that a 3D object is fitted onto it's projection in a 2D picture. It is 6D, because the 3D bounding box fitting requires 3 translational inputs (x,y,z) and 3 rotational degrees. It is designed to create labels for [singleshotpose](https://github.com/microsoft/singleshotpose) and [betapose](https://github.com/sjtuytc/betapose). But should be easily extendable to other 6D label formats.
 
